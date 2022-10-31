@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  students:
+    image: mysql:8.0.29
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_USER=springy
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=db_students
+    ports:
+      - 3306:3306
+
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - students
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://students:3306/db_students
+volumes:
+  mysql-data:
